@@ -1,10 +1,6 @@
 name: Release
 
-on:
-  push:
-    # Build and publish artifacts for a release
-    tags:
-      - "v*.*.*"
+on: {}
 
 jobs:
   build:

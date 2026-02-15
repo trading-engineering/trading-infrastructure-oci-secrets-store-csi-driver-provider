@@ -5,6 +5,14 @@ Provider for OCI Vault allows you to get secrets stored in OCI Vault and mount t
 
 The provider is a gRPC server accessible via the Unix domain socket. It's interface is defined by the Secrets Store CSI driver. Secrets Store CSI Driver requests the provider's API in order to mount secrets onto the pods.
 
+## Fork notice
+
+This repository is a fork of:
+https://github.com/oracle/oci-secrets-store-csi-driver-provider/tree/arm-support
+
+Original project by Oracle.
+This fork enables multi-architecture container images (amd64 + arm64) and custom CI builds.
+
 ## Getting Started
 
 Please have a look at [Getting Started](./GettingStarted.md)
