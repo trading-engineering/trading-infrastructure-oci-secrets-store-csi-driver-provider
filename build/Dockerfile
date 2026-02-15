@@ -15,8 +15,8 @@ COPY cmd       ./cmd
 COPY internal  ./internal
 COPY vendor    ./vendor
 
-# Build provider
-RUN make test build
+# Build provider (static binary to avoid glibc issues)
+RUN CGO_ENABLED=0 make test build
 
 FROM oraclelinux:7-slim
 
