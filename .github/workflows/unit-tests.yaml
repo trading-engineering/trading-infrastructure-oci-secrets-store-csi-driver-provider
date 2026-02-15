@@ -1,36 +1,35 @@
 name: Unit Tests
 
 on:
-  workflow_call: {}
-  push: 
-    branches-ignore:
-      - gh-pages
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
 jobs:
   build-binary-n-test:
-    name: Build Binary locally and run unit tests
+    name: Build binary and run unit tests
     runs-on: ubuntu-latest
+
     steps:
-
-      - name: Set up Go 1.x
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.19
-        id: go
-
-      - name: Check out code into the Go module directory
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: build the binary
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Build binary
         run: |
           go build -mod vendor -o dist/provider ./cmd/server/main.go
-      
-      - name: Run Unit Tests
+
+      - name: Run unit tests
         run: |
           go test -covermode=count -coverprofile=profile.cov ./...
-      
-      - name: Send coverage
+
+      - name: Upload coverage to Coveralls
         env:
           COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          GO111MODULE=off go get github.com/mattn/goveralls
-          $(go env GOPATH)/bin/goveralls -coverprofile=profile.cov -service=github
+          go install github.com/mattn/goveralls@latest
+          goveralls -coverprofile=profile.cov -service=github
