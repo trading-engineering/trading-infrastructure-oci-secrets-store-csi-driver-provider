@@ -1,24 +1,39 @@
 name: BuildnPush
 
+permissions:
+  contents: read
+  packages: write
+
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
-    inputs:
-      IMAGE_REGISTRY:
-        required: true
-        type: string
 
 jobs:
   unit-tests:
-    uses: ./.github/workflows/unit-tests.yaml
+    name: Run unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Run tests
+        run: |
+          go test ./...
 
   image-build-n-push:
-    needs: [unit-tests]
+    name: Build and push multi-arch container image
     runs-on: ubuntu-latest
-    name: Build multi-arch container image and push to registry
+    needs: [unit-tests]
+
     env:
-      IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}
+      IMAGE_REGISTRY: ghcr.io/trading-engineering
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -31,8 +46,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Log into GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${GITHUB_ACTOR,,} --password-stdin
+      - name: Login to GitHub Container Registry
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io \
+            -u ${GITHUB_ACTOR,,} --password-stdin
 
       - name: Build and push multi-arch image
         run: |
