@@ -32,7 +32,7 @@ jobs:
     needs: [unit-tests]
 
     env:
-      IMAGE_REGISTRY: ghcr.io/canonicalflow
+      IMAGE_REGISTRY: ghcr.io/tradingchassis
 
     steps:
       - name: Checkout
