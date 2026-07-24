@@ -1,3 +1,7 @@
+Archived legacy repository.  
+Development continues in:
+[TradingChassis/oci-secrets-store-csi-driver-provider](https://github.com/TradingChassis/oci-secrets-store-csi-driver-provider)
+
 <!-- ![](https://github.com/oracle-samples/oci-secrets-store-csi-driver-provider/blob/main/images/unavailability_banner.png) -->
 # OCI Secrets Store CSI Driver Provider
 
